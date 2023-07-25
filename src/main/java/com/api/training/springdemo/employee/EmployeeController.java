@@ -1,6 +1,9 @@
 package com.api.training.springdemo.employee;
 
+import jakarta.websocket.server.PathParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -8,15 +11,18 @@ import java.util.List;
 @RestController
 public class EmployeeController {
 
+    @Autowired  //dependency injections
+    private EmployeeService employeeService;
+
     //List of employees available
     @GetMapping(path = "/employees")
     public List<Employee> getEmployees() {
-        return List.of(
-                new Employee(1, "mosu", "mosu@gmail.com",2500),
-                new Employee(2, "santhosh", "santhosh@gmail.com",4000),
-                new Employee(3, "subash", "subash@gmail.com",4500),
-                new Employee(4, "arasu", "arasu@gmail.com",6800)
-        );
+        return employeeService.getEmployees(); //one class depends on another
     }
 
+    // Get single employee in the list of employees
+    @GetMapping(path = "/employees/{id}")
+    public Employee getEmployee(@PathVariable Integer id) {
+        return employeeService.getEmployees().get(id - 1);
+    }
 }
